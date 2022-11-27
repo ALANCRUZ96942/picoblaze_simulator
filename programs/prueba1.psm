@@ -1,0 +1,30 @@
+		;aplicaci¨®n que contabiliza el n¨²mero de interrupciones
+		;de un timer que cuenta aprox. un segundo
+		;memoria de programa de 1k
+		CONSTANT PuertoLEDS, 01
+		;
+		NAMEREG s0, Contador
+		;
+		;inicio de programa
+start:
+		;limpia registro y habilita interrupci¨®n
+		LOAD		Contador, 00
+		ENABLE		INTERRUPT
+loop:
+		;queda en espera del ISR
+		JUMP		loop
+		;
+isr:
+		;subrutina ISR
+		;incrementa el registro contador y lo escribe a puerto
+		ADD			Contador, 01
+		OUTPUT		Contador, PuertoLEDS
+		RETURNI		ENABLE
+		;
+		;vector de interrupciones, coincide con la declaraci¨®n en kcpsm6
+		ADDRESS		3FF
+		JUMP		isr
+		;
+		
+
+
