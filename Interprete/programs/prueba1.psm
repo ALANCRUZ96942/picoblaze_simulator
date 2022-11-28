@@ -1,4 +1,4 @@
-		;aplicaci¨®n que contabiliza el n¨²mero de interrupciones
+		;aplicaciï¿½ï¿½n que contabiliza el nï¿½ï¿½mero de interrupciones
 		;de un timer que cuenta aprox. un segundo
 		;memoria de programa de 1k
 		CONSTANT PuertoLEDS, 01
@@ -7,7 +7,7 @@
 		;
 		;inicio de programa
 start:
-		;limpia registro y habilita interrupci¨®n
+		;limpia registro y habilita interrupciï¿½ï¿½n
 		LOAD		Contador, 00
 		ENABLE		INTERRUPT
 loop:
@@ -21,7 +21,7 @@ isr:
 		OUTPUT		Contador, PuertoLEDS
 		RETURNI		ENABLE
 		;
-		;vector de interrupciones, coincide con la declaraci¨®n en kcpsm6
+		;vector de interrupciones, coincide con la declaraciï¿½ï¿½n en kcpsm6
 		ADDRESS		3FF
 		JUMP		isr
 		;

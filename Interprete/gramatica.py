@@ -1,3 +1,5 @@
+import ts as TS
+ts_global = TS.TablaDeSimbolos()
 
 #palabras reservadas
 reservadas = {
@@ -83,7 +85,7 @@ t_DPUNTOS   = r':'
 t_COMILLAS   = r'"'
 
 
-
+from instrucciones import *
 
 def t_REG(t):
     r's[A-F_0-9]'   
@@ -104,7 +106,6 @@ def t_ID(t):
 def t_NUMBER(t):
     r'[A-F_0-9][A-F_0-9]'
     t.value = int(t.value,base=16) 
-    print(t.value)
     return t
 
 def t_CHAR(t):
@@ -146,6 +147,7 @@ def p_init(t) :
 
 def p_instrucciones_lista(t) :
     '''instrucciones            :  instrucciones instruccion'''
+    t[1].append(t[2])
     t[0] = t[1]
 
 
@@ -154,7 +156,7 @@ def p_instrucciones_instruccion(t) :
     t[0] = [t[1]]
 
 def p_instruccion(t) :
-    '''instruccion              : ID DPUNTOS
+    '''instruccion              : encapsular
                                 | nombre_reg
                                 |  reg_reg
                                 | jumping
@@ -177,7 +179,11 @@ def p_instruccion_nombre_reg(t):
     nombre_reg      : NAMEREG REG COMA ID
                     | CONSTANT ID COMA NUMBER
     '''
-    t[0] = t[1]
+
+    if(t[1] == 'NAMEREG'):            
+        t[0] = Asignacion(t[4],t[1], t[2])
+    else:
+        t[0] = Asignacion(t[2],t[1], t[4])
 
 def p_instruccion_regreg(t):
     '''
@@ -196,6 +202,7 @@ def p_instruccion_regreg(t):
                 | OUTPUT reg COMA reg
                 | COMPARE reg COMA reg
     '''
+    
     t[0] = t[1]
 
 def p_instruccion_jumping(t):
@@ -206,6 +213,11 @@ def p_instruccion_jumping(t):
                     | JUMP C COMA ID
                     | JUMP NC COMA ID
     '''
+
+
+
+
+
     t[0] = t[1]
 
 
@@ -219,7 +231,8 @@ def p_instruccion_calling(t):
                     | CALL NC COMA ID
     '''
     t[0] = t[1]
-
+ 
+    
 
 def p_instruccion_interrupt(t):
     '''
@@ -246,6 +259,12 @@ def p_instruccion_returning(t):
     '''
     t[0] = t[1]
 
+
+def p_instruccion_encapsular(t):
+    '''  encapsular      :    ID DPUNTOS  
+    '''
+    t[0] = Encapsular(t[1],int( t.lexer.lineno))
+    
 def p_term(t) :
     '''reg            : REG
                     |  CHAR

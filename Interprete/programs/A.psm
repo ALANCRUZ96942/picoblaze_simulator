@@ -1,0 +1,83 @@
+		;los datos recibidos por el uart se imprimen en los leds (c¨®digo ASCII)
+		;memoria de programa de 1k
+		CONSTANT PuertoLeeListoTX,    11
+		CONSTANT PuertoEscribeDatoTX, 12
+		CONSTANT PuertoLeeDatoRX,     13
+		CONSTANT PuertoDatoListoRX,   14
+		CONSTANT PuertoDatoRXLeido,   15
+		CONSTANT PuertoEscribeLEDS,   22
+		ADDRESS 3FA
+		;
+		NAMEREG s0, DatoSerial
+		NAMEREG s1, EstadoTX
+		NAMEREG s2, EstadoRX
+		NAMEREG	s3, LeidoRX
+		NAMEREG s4, DatoSegmentos
+		;
+		;inicio de programa
+start:
+		;imprime mensaje en consola
+		CALL		start
+		;
+		;verifica si hay un nuevo dato RX
+wait_rx:
+		INPUT		EstadoRX, PuertoDatoListoRX
+		COMPARE		EstadoRX, 01
+		JUMP		NZ, wait_rx
+		;hay nuevo dato RX, se lee
+		INPUT		DatoSerial, PuertoLeeDatoRX
+		;se retransmite el dato RX
+		CALL		tx_uart
+		;se informa de dato RX le¨ªdo
+		LOAD		LeidoRX, 01
+		OUTPUT		LeidoRX, PuertoDatoRXLeido
+		;escribe dato serial a puerto de leds
+		OUTPUT		DatoSerial, PuertoEscribeLEDS
+		;imprime nueva l¨ªnea y comienza de nuevo		
+		CALL		nuevalinea
+		JUMP		start
+		;
+		;
+		;rutina de transmisi¨®n del uart
+tx_uart:
+		INPUT		EstadoTX, PuertoLeeListoTX
+		COMPARE		EstadoTX, 01
+		JUMP		Z, tx_uart
+		OUTPUT		DatoSerial, PuertoEscribeDatoTX
+		RETURN
+		;
+mensaje:
+		;mensaje en consola que pide un dato
+		LOAD		DatoSerial, "D"
+		CALL		tx_uart
+		LOAD		DatoSerial, "i"
+		CALL		tx_uart
+		LOAD		DatoSerial, "g"
+		CALL		tx_uart
+		LOAD		DatoSerial, "i"
+		CALL		tx_uart
+		LOAD		DatoSerial, "t"
+		CALL		tx_uart
+		LOAD		DatoSerial, "o"
+		CALL		tx_uart
+		LOAD		DatoSerial, ":"
+		CALL		tx_uart
+		LOAD		DatoSerial, " "
+		CALL		tx_uart
+		RETURN
+		;
+nuevalinea:
+		;imprime nueva linea y retorno de carro en terminal
+		LOAD		DatoSerial, 0A
+		CALL		tx_uart
+		LOAD		DatoSerial, 0D			
+		CALL		tx_uart
+		
+		;
+
+
+
+
+
+
+

@@ -6,10 +6,11 @@ class TIPO_DATO(Enum) :
 class Simbolo() :
     'Esta clase representa un simbolo dentro de nuestra tabla de simbolos'
 
-    def __init__(self, id, tipo, valor) :
+    def __init__(self, id, tipo, valor,derecha=[]) :
         self.id = id
         self.tipo = tipo
         self.valor = valor
+        self.derecha = derecha
 
 class TablaDeSimbolos() :
     'Esta clase representa la tabla de simbolos'

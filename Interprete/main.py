@@ -4,7 +4,7 @@ from tkinter import font
 import tkinter
 from turtle import right
 import sys
-
+import subprocess
 
 
 from lexer import PicoBlaze
@@ -13,13 +13,22 @@ from chlorophyll import CodeView
 import os
 import errno
 
+import principal
+
+start = 0
+consolas = 'Consola'
+
+if(start == 0):
+    name = input("Enter file name : ")
+    start = 1
 
 
-name=input("Enter file name : ")
 
 
 
 
+arg1 = 0
+arg2 = ''
 
 def save_code(code):
 
@@ -29,7 +38,7 @@ def save_code(code):
         if e.errno != errno.EEXIST:
             raise
 
-    text_file = open('programs/'+name + '.psm', "w")
+    text_file = open('programs/'+name+ '.psm', "w")
     #write string to file
     text_file.write(code)
     
@@ -37,14 +46,20 @@ def save_code(code):
     text_file.close()
 
 
-
-def execute_code(name):
+def verify_code():
+    global consolas
+    arg2 = name
+    subprocess.call(['python','principal.py',str(arg1),str(arg2)])
+    for vari in principal.variables:
+         my_string_var.set(str(vari))
+        
+        
+        
     
-    sys.path.insert(1, 'InterpreteSencilloPly-master')
-    exec(open('interpreteSencilloPly-master/principal.py').read())
     
     
-
+def exec_by_line(linea):
+    linea.tag_add('sel', 'insert linestart', 'insert lineend')
 
 
 
@@ -55,20 +70,6 @@ root.option_add("*tearOff", 0)
 
 main_bar = tk.Frame()
 main_bar.pack(fill="x") #Configurar el metodo pack()
-
-
-
-
-
-
-
-
-r_btn_image3 = tk.PhotoImage(file = r"assets\run.png")
-photoimage3 = r_btn_image3.subsample(25, 25)
-run_btn3 = tk.Button(main_bar, text='Run Code',  fg='lime',
-                    font=('Bold', 15),image=photoimage3)
-run_btn3.grid(row=0,column=2)
-
 
 
 left_frame = tk.Frame(root)
@@ -218,18 +219,60 @@ notebook.pack(fill="both", expand=True)
 
 
 
-
-
-
 codeview = CodeView(central, lexer=PicoBlaze, color_scheme="monokai")
 codeview.pack(fill="both", expand=True)
+
+path = "./programs/"+str(name)+".psm"
+ 
+
+isFile = os.path.isfile(path)
+
+
+if(isFile):
+    with open(path) as f:
+        contents = f.read()
+        codeview.insert('1.0',contents)
+
+
+
+
+back_frame = tk.Frame(root)
+back_frame.pack_propagate(False)
+back_frame.configure(width=100,height=200)
+back_frame.pack(side=tk.BOTTOM, fill=tk.X)
+
+etiqueta5 = tk.Label(back_frame,text="Consola")
+etiqueta5.pack(fill="x")
+
+my_string_var = tk.StringVar()
+my_string_var.set("What should I learn")
+
+consola = tk.Label(back_frame,textvariable =my_string_var)
+
+
+
+
+
+
+"""
+Texto = tk.Text(back_frame)
+#Texto.insert(tk.END, "prubeasdasdasd")
+
+Texto.insert(tk.END,consolas)
+Texto.pack(fill="x",padx=10,pady=10)"""
+
+
+
+
 
 r_btn_image = tk.PhotoImage(file = r"assets\save.png")
 photoimage = r_btn_image.subsample(12, 12)
 run_btn = tk.Button(main_bar, text='Run Code',  fg='lime',
                     font=('Bold', 15),image=photoimage,
-                    command=lambda: save_code(codeview.get('1.0', tk.END))
-                    
+                    command=lambda:
+                     
+                    save_code(codeview.get('1.0', tk.END))
+        
                     )
 run_btn.grid(row=0,column=0)
 
@@ -240,8 +283,27 @@ photoimage2 = r_btn_image2.subsample(25, 25)
 run_btn2 = tk.Button(main_bar, text='Run Code',  fg='lime',
                     font=('Bold', 15),image=photoimage2,
                     
-                    command=lambda: execute_code(name))
+                    command=lambda: verify_code())
 run_btn2.grid(row=0,column=1)
+
+
+
+
+
+r_btn_image3 = tk.PhotoImage(file = r"assets\run.png")
+photoimage3 = r_btn_image3.subsample(25, 25)
+run_btn3 = tk.Button(main_bar, text='Run Code',  fg='lime',
+                    font=('Bold', 15),image=photoimage3,
+                    
+                    command=lambda: exec_by_line(codeview))
+                    
+run_btn3.grid(row=0,column=2)
+
+
+
+
+
+
 
 right_frame = tk.Frame(root)
 right_frame.pack_propagate(False)
@@ -251,6 +313,7 @@ right_frame.pack(side=tk.LEFT, fill=tk.Y)
 etiqueta4 = tk.Label(right_frame,text="InputPort")
 etiqueta4.pack(anchor="w")
 
+consola.pack(fill="x")
 
 root.update()
 root.minsize(root.winfo_width(), root.winfo_height())

@@ -17,7 +17,7 @@
 		;inicio de programa
 start:
 		;imprime mensaje en consola
-		CALL		mensaje
+		CALL		start
 		;
 		;verifica si hay un nuevo dato RX
 wait_rx:
