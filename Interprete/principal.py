@@ -19,6 +19,7 @@ def main(arg1,arg2):
         print('id es '+simbolo.id+' es del tipo '+simbolo.tipo+' y vale: '+str(simbolo.valor))
 
 
+
     def procesar_encapsular_guardar(instr,tsf) :
         simbolo = TS.Simbolo(instr.id, 'f', 'f')
         tsf.agregar(simbolo)
@@ -96,8 +97,8 @@ def main(arg1,arg2):
             if isinstance(instr, Asignacion) : procesar_asignacion(instr, ts)
             elif isinstance(instr, Encapsular) : procesar_encapsular_guardar(instr,tsf)
             #elif isinstance(instr, Llamar) : procesar_llamado(instr,tsf)
-            #else : print(instr)
-            variables.append(instr)
+            else : print(instr)
+            #variables.append(instr)
 
 
 

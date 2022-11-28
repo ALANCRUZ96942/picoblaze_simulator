@@ -50,8 +50,7 @@ def verify_code():
     global consolas
     arg2 = name
     subprocess.call(['python','principal.py',str(arg1),str(arg2)])
-    for vari in principal.variables:
-         my_string_var.set(str(vari))
+    print(principal.main)
         
         
         
@@ -245,7 +244,7 @@ etiqueta5 = tk.Label(back_frame,text="Consola")
 etiqueta5.pack(fill="x")
 
 my_string_var = tk.StringVar()
-my_string_var.set("What should I learn")
+my_string_var.set("Nothing to update")
 
 consola = tk.Label(back_frame,textvariable =my_string_var)
 
